@@ -48,5 +48,32 @@ router.delete('/:id', async (req, res) => {
         where: { id_cargo: req.params.id }
     });
 
-    res
+    res.status(200).json({ message: "Funcionário excluído com sucesso!" });
 });
+
+//Alterar funcionário por id (put)
+router.put('/:id', async (req, res) => {
+    const { nome_funcionario } = req.body;
+    const { fk_cargo } = req.body;
+
+    await Funcionario.update(
+        { nome_funcionario, fk_cargo },
+        {
+            where: { id_funcionario: req.params.id },
+        }
+    );
+
+    const { nome_cargo } = req.body;
+
+    await Cargo.update(
+        { nome_cargo },
+        {
+            where: { id_cargo: req.params.id },
+        }
+    );
+
+    res.status(200).json({ message: 'Funcionário atualizado com sucesso!' });
+
+});
+
+module.exports = router;
