@@ -1,6 +1,6 @@
 const db = require('./db');
 const produtos = db.sequelize.define('produtos', {
-    id_produtos: { //Escrevi no plural no script mysql e fiquei com preguiça de refazer 
+    id_produtos: { //! Escrevi no plural no script mysql 
         type: db.Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
