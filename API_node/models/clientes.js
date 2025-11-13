@@ -19,6 +19,20 @@ const clientes = db.sequelize.define('clientes', {
         references: {model: 'status_cliente', key: 'id_status'},
         onDelete: 'CASCADE',
         allowNull: false
+    },
+    fk_endereco: {
+        type:  db.Sequelize.INTEGER,
+        allowNull: false,
+        references: {model: 'endereco', key: 'id_endereco'},
+        onDelete: 'CASCADE',
+        allowNull: false   
+    },
+    fk_telefone: {
+        type:  db.Sequelize.INTEGER,
+        allowNull: false,
+        references: {model: 'telefone', key: 'id_telefone'},
+        onDelete: 'CASCADE',
+        allowNull: false
     }
 }, {freezeTableName: true});
 
