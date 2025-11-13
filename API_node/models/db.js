@@ -8,7 +8,7 @@ const sequelize = new Sequelize('padaria', 'root', 'root', {
 });
 
 sequelize.authenticate().then(function() {
-    console.log("Conectado com sucesso!")
+    console.log("Conectado com sucesso à Padaria!")
 }).catch(function(erro) {
     console.log("Falha ao se conectar " + erro)
 });
