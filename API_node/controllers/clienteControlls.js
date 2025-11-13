@@ -62,19 +62,19 @@ router.delete('/:id', async (req, res) => {
         where: {
             id_clientes: req.params.id,
         },
-    }),
+    });
 
     await Status.destroy({
         where: {
             id_status: req.params.id,
         },
-    }),
+    });
 
     await Endereco.destroy({
         where: {
             id_endereco: req.params.id,
         },
-    }),
+    });
 
     await Telefone.destroy({
         where: {
