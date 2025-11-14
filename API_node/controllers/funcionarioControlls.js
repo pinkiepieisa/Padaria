@@ -25,7 +25,13 @@ router.post('/', async (req, res) => {
     try {
         const { nome_funcionario, fk_cargo } = req.body;
 
-        // Cria o novo funcionário
+        const cargoExiste = await Cargo.findByPk(fk_cargo);
+        if (!cargoExiste) {
+            return res.status(400).json({
+                erro: `O cargo com ID ${fk_cargo} não existe.`
+            });
+        }
+
         await Funcionario.create({
             nome_funcionario,
             fk_cargo
@@ -43,7 +49,7 @@ router.post('/', async (req, res) => {
 //Buscar funcionario por id (get)
 router.get('/:id', async (req, res) => {
     try {
-        const funcionario = await Funcionario.findByPk(req.params.id);
+        const funcionario = await Funcionario.findByPk(req.params.id, { include: { model: Cargo }});
 
         res.status(200).json({ funcionario });
 

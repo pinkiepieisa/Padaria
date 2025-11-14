@@ -1,13 +1,13 @@
 const db = require('./db');
 const produtos = db.sequelize.define('produtos', {
-    id_produtos: { //! Escrevi no plural no script mysql 
+    id_produto: { 
         type: db.Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    nome_produtos: {
-        type: db.Sequelize.TEXT,
+    nome_produto: {
+        type: db.Sequelize.STRING,
         allowNull: false
     },
     fk_tipo_p: {
@@ -15,17 +15,16 @@ const produtos = db.sequelize.define('produtos', {
         allowNull: false,
         references: {model: 'tipo_produto', key: 'id_tipo'},
         onDelete: 'CASCADE',
-        allowNull: false
     },
     unidade_medida: {
-        type: db.Sequelize.TEXT,
+        type: db.Sequelize.STRING,
         allowNull: false,
     },
     preco_produto: {
-        type: db.Sequelize.DECIMAL,
+        type: db.Sequelize.DECIMAL(10,2),
         allowNull: false
     }
 }, {freezeTableName: true});
 
-produtos.sync({force: false});
+produtos.sync({force: true});
 module.exports = produtos;

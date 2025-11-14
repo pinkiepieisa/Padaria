@@ -11,7 +11,7 @@ const clientes = db.sequelize.define('clientes', {
         allowNull: false
     },
     limite_fiado: {
-        type: db.Sequelize.DECIMAL 
+        type: db.Sequelize.DECIMAL(10,2) 
     },
 
 }, {freezeTableName: true});

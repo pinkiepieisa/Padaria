@@ -7,10 +7,10 @@ const tipo_produto = db.sequelize.define('tipo_produto', {
         primaryKey: true
     },
     nome_tipo: {
-        type: db.Sequelize.TEXT,
+        type: db.Sequelize.STRING,
         allowNull: false
     }
 }, {freezeTableName: true});
 
-tipo_produto.sync({force: false});
+tipo_produto.sync({force: true});
 module.exports = tipo_produto;

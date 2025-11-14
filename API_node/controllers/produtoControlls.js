@@ -7,78 +7,108 @@ const Tipo_produto = require('../models/tipo_produto');
 
 //Busca o produto pelo id (get)
 router.get('/', async (req, res) => {
-    const produtos = await Produtos.findAll();
-    const tipo_produto = await Tipo_produto.findAll();
+    try {
 
-    res.status(200).json(produtos, tipo_produto);
+        const produtos = await Produtos.findAll({ include: { model: Tipo_produto }});
 
+        res.status(200).json({ produtos });
+
+    } catch (error) {
+
+        res.status(500).json({ erro: error.message });
+
+    }
 });
 
 //Cadastra o produto (post)
 router.post('/', async (req, res) => {
-    const { nome_produto } = req.body;
-    const { fk_tipo_p } = req.body;
-    const { unidade_medida } = req.body;
-    const { preco_produto } = req.body;
+    try {
+        const { nome_produto, fk_tipo_p, unidade_medida, preco_produto } = req.body;
 
-    const newProduto = await Produtos.create({ nome_produto, fk_tipo_p, unidade_medida, preco_produto });
+        // Verifica se o tipo existe
+        const tipoExiste = await Tipo_produto.findByPk(fk_tipo_p);
+        if (!tipoExiste) {
+            return res.status(400).json({
+                erro: `O tipo de produto com ID ${fk_tipo_p} não existe.`
+            });
+        }
 
-    const { nome_tipo } = req.body;
+        await Produtos.create({ nome_produto, fk_tipo_p, unidade_medida, preco_produto });
 
-    const newTipoP = await Tipo_produto.create({ nome_tipo });
+        res.status(200).json({ message: "Produto cadastrado com sucesso!" });
 
-    res.status(200).json({ message: 'Cadastro do produto realizado com sucesso!'});
+    } catch (error) {
+
+        res.status(500).json({ erro: error.message });
+
+    }
 
 });
 
 //Busca produto pelo id (get)
 router.get('/:id', async (req, res) => {
-    //const id = req.params;
-    const produtos = await Produtos.findByPk(req.params.id);
-    const tipo_produto = await Tipo_produto.findByPk(req.params.id);
+    try {
 
-    res.status(200).json(produtos, tipo_produto);
+        const produto = await Produtos.findByPk(req.params.id, { include: { model: Tipo_produto }});
+
+        if (!produto) return res.status(404).json({ erro: "Produto não encontrado!" });
+
+        res.status(200).json({ produto });
+
+    } catch (error) {
+
+        res.status(500).json({ erro: error.message });
+
+    }
 
 });
 
 //Deletar produto por id (delete)
 router.delete('/:id', async (req, res) => {
-    await Produtos.destroy({
-        where: { id_produtos: req.params.id },
-    });
+    try {
 
-    await Tipo_produto.destroy({
-        where: { id_tipo: req.params.id },
-    });
+        await Produtos.destroy({
+            where: { id_produto: req.params.id }
+        });
 
-    res.status(200).json({ message: "Produto excluído com sucesso!" });
+        res.status(200).json({ message: "Produto excluído com sucesso!" });
+
+    } catch (error) {
+
+        res.status(500).json({ erro: error.message });
+
+    }
 
 });
 
 //Alterar produto por id (put)
 router.put('/:id', async (req, res) => {
-    const { nome_produto } = req.body;
-    const { fk_tipo_p } = req.body;
-    const { unidade_medida } = req.body;
-    const { preco_produto } = req.body;
 
-    await Produtos.update(
-        { nome_produto, fk_tipo_p, unidade_medida, preco_produto },
-        {
-            where: { id_produtos: req.params.id },
+    try {
+
+        const { nome_produto, fk_tipo_p, unidade_medida, preco_produto } = req.body;
+
+        const tipoExiste = await TipoProduto.findByPk(fk_tipo_p);
+
+        if (!tipoExiste) {
+
+            return res.status(400).json({
+                erro: "O tipo informado não existe!"
+            });
         }
-    );
 
-    const { nome_tipo } = req.body;
+        await Produtos.update(
+            { nome_produto, fk_tipo_p, unidade_medida, preco_produto },
+            { where: { id_produto: req.params.id } }
+        );
 
-    await Tipo_produto.update(
-        { nome_tipo },
-        {
-            where: { id_tipo: req.params.id },
-        }
-    );
+        res.status(200).json({ message: "Produto atualizado com sucesso!" });
 
-    res.status(200).json({ message: 'Produto atualizado com sucesso!'});
+    } catch (error) {
+
+        res.status(500).json({ erro: error.message });
+
+    }
 
 });
 
