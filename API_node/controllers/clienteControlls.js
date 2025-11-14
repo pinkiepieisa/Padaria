@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
     const status = await Status.findAll();
     const telefone = await Telefone.findAll();
 
-    res.status(200).json(cliente, endereco, status, telefone);
+    res.status(200).json({ cliente, endereco, status, telefone });
 });
 
 //Cadastro do cliente (Post)
@@ -35,12 +35,12 @@ router.post('/', async (req, res) => {
     const { numero } = req.body;
     const { bairro } = req.body;
     const { complemento } = req.body;
-    const { fk_cliente } = req.body;
 
-    const newClient = await Cliente.create({ nome_cliente, limite_fiado, fk_status, fk_endereco, fk_telefone});
+    const newClient = await Cliente.create({ nome_cliente, limite_fiado, fk_status});
+    const fk_cliente = newClient.id_cliente;
     const newStatus = await Status.create({ status });
-    const newEndereco = await Endereco.create({ rua, numero, bairro, complemento, fk_cliente });
-    const newTelefone = await Telefone.create({ telefone, tipo_telefone, fk_cliente });
+    const newEndereco = await Endereco.create({ rua, numero, bairro, complemento, fk_cliente: fk_cliente });
+    const newTelefone = await Telefone.create({ telefone, tipo_telefone, fk_cliente: fk_cliente });
 
     res.status(200).json({ message: 'Cadastro feito com sucesso!' });
 });
@@ -48,12 +48,12 @@ router.post('/', async (req, res) => {
 //Busca por id o cliente (Get)
 router.get('/:id', async (req, res) => {
     //const id = req.params
-    const cliente = await Cliente.findByPk(req.params.id);
+    const cliente = await Cliente.findByPk(id);
     const status = await Status.findByPk(req.params.id);
-    const endereco = await Endereco.findByPk(req.params.id);
-    const telefone = await Telefone.findByPk(req.params.id);
+    const endereco = await Endereco.findAll({ where: { fk_cliente: id }});
+    const telefone = await Telefone.findAll({ where: { fk_cliente: id }});
 
-    res.status(200).json(cliente, status, endereco, telefone);
+    res.status(200).json({ cliente, status, endereco, telefone });
 });
 
 //Deletar cliente por id (delete)

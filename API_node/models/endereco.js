@@ -2,7 +2,7 @@ const db = require('./db');
 const endereco = db.sequelize.define('endereco', {
     id_endereco: {
         type: db.Sequelize.INTEGER,
-        autoIncremente: true,
+        autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
@@ -14,22 +14,22 @@ const endereco = db.sequelize.define('endereco', {
         allowNull: false
     },
     rua: {
-        type: db.Sequelize.TEXT,
+        type: db.Sequelize.STRING,
         allowNull: false
     },
     numero: {
-        type: db.Sequelize.TEXT,
+        type: db.Sequelize.STRING,
         allowNull: false
     },
     bairro: {
-        type: db.Sequelize.TEXT,
+        type: db.Sequelize.STRING,
         allowNull: false
     },
     complemento: {
-        type: db.Sequelize.TEXT,
+        type: db.Sequelize.STRING,
         allowNull: false
     }
 }, {freezeTableName: true});
 
-endereco.sync({force: false});
+endereco.sync({force: true});
 module.exports = endereco;

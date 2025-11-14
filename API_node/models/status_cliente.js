@@ -7,10 +7,17 @@ id_status: {
     primaryKey: true
   },
   status_cli: {
-    type: db.Sequelize.TEXT,
+    type: db.Sequelize.STRING,
+    allowNull: false
+  },
+  fk_cliente: {
+    type:  db.Sequelize.INTEGER,
+    allowNull: false,
+    references: {model: 'clientes', key: 'id_cliente'},
+    onDelete: 'CASCADE',
     allowNull: false
   }
 }, {freezeTableName: true});
 
-status_cliente.sync({force: false});
+status_cliente.sync({force: true});
 module.exports = status_cliente;

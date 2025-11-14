@@ -2,7 +2,7 @@ const db = require('./db');
 const telefone = db.sequelize.define('telefone', {
     id_telefone: {
         type: db.Sequelize.INTEGER,
-        autoIncremente: true,
+        autoIncrement: true,
         allowNull: false,
         primaryKey: true        
     },
@@ -14,14 +14,14 @@ const telefone = db.sequelize.define('telefone', {
         allowNull: false
     },
     telefone_cliente: {
-        type: db.Sequelize.TEXT,
+        type: db.Sequelize.STRING,
         allowNull: false
     },
     tipo_telefone: {
-        type: db.Sequelize.TEXT,
+        type: db.Sequelize.STRING,
         allowNull: false
     }
 }, {freezeTableName: true});
 
-telefone.sync({force: false});
+telefone.sync({force: true});
 module.exports = telefone;
