@@ -127,7 +127,7 @@ router.put('/:id', async (req, res) => {
         await Cliente.update(
             { nome_cliente, limite_fiado },
             {
-                where: { id_clientes: id },
+                where: { id_cliente: id },
             }
         );
 
