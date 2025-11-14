@@ -6,8 +6,16 @@ const Endereco = require("./endereco");
 const Status = require("./status_cliente");
 const Telefone = require("./telefone");
 
-const Produtos = require('./produtos');
+const Produto = require('./produtos');
 const TipoProduto = require('./tipo_produto');
+
+const Funcionario = require('./funcionarios');
+const Cargo = require('./tipo_cargo');
+
+const Pagamento = require('./pagamento');
+const Venda = require('./vendas');
+const VendaProduto = require('./venda_produto');
+
 
 // Criando as associations
 
@@ -20,12 +28,35 @@ Cliente.hasMany(Telefone, { foreignKey: "fk_cliente" });
 Telefone.belongsTo(Cliente, { foreignKey: "fk_cliente" });
 
 // Clientes 1 ----- N Status 
-Cliente.hasMany(Status, { foreignKey: "fk_cliente" });
+Cliente.hasOne(Status, { foreignKey: "fk_cliente" });
 Status.belongsTo(Cliente, { foreignKey: "fk_cliente" });
 
 TipoProduto.hasMany(Produtos, { foreignKey: "fk_tipo_p" });
-Produtos.belongsTo(TipoProduto, { foreignKey: "fk_tipo_p" });
+Produto.belongsTo(TipoProduto, { foreignKey: "fk_tipo_p" });
 
+Cargo.hasMany(Funcionarios, { foreignKey: "fk_cargo" });
+Funcionario.belongsTo(Cargo, { foreignKey: "fk_cargo" });
+
+//Vendas
+Cliente.hasMany(Vendas, { foreignKey: "fk_cliente" });
+Venda.belongsTo(Cliente, { foreignKey: "fk_cliente" });
+
+Funcionario.hasMany(Vendas, { foreignKey: "fk_funcionario" });
+Venda.belongsTo(Funcionarios, { foreignKey: "fk_funcionario" });
+
+Pagamento.hasMany(Vendas, { foreignKey: "fk_pagamento" });
+Venda.belongsTo(Pagamento, { foreignKey: "fk_pagamento" });
+
+//Venda produto
+Venda.hasMany(VendaProduto, { foreignKey: "fk_venda" });
+VendaProduto.belongsTo(Vendas, { foreignKey: "fk_venda" });
+
+Produto.hasMany(VendaProduto, { foreignKey: "fk_produto" });
+VendaProduto.belongsTo(Produtos, { foreignKey: "fk_produto" });
+
+//Exportações
 module.exports = { Cliente, Endereco, Status, Telefone };
-module.exports = { Produtos, TipoProduto };
+module.exports = { Produto, TipoProduto };
+module.exports = { Funcionario, Cargo };
+module.exports = { Pagamento, Venda, VendaProduto };
 
