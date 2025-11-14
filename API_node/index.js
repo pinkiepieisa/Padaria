@@ -25,3 +25,4 @@ app.use('/produto', produto);
 app.use('/venda', venda);
 
 app.listen(port, () => console.log(`Servidor rodando na porta: ${port}!`));
+
