@@ -8,10 +8,10 @@ const app = express();
 const port = 8081;
 
 //Importações
-const cliente = require('./controllers/clienteControlls.js');
-const funcionario = require('./controllers/funcionarioControlls.js');
-const produto = require('./controllers/produtoControlls.js');
-const venda = require('./controllers/vendaControlls.js');
+const cliente = require('./controllers/clienteController.js');
+const funcionario = require('./controllers/funcionarioController.js');
+const produto = require('./controllers/produtoController.js');
+const venda = require('./controllers/vendaController.js');
 
 //Rotas
 app.use(bodyParser.json());
