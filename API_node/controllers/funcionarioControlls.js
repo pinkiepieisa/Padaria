@@ -4,75 +4,93 @@ const router = express.Router();
 //Importando os módulos
 const Funcionario = require('../models/funcionarios');
 const Cargo = require('../models/tipo_cargo');
-const { where } = require('sequelize');
+
 
 //Busca funcionário (get)
 router.get('/', async (req, res) => {
-    const funcionario = await Funcionario.findAll();
-    const cargo =  await Cargo.findAll();
+    try {
+        const funcionario = await Funcionario.findAll({ include: {model: Cargo }});
 
-    res.status(200).json(funcionario, cargo);
+        res.status(200).json({ funcionario });
+
+    } catch (error) {
+
+        res.status(500).json({ erro: error.message });
+
+    }
 });
 
 //Cadastrar funcionário
 router.post('/', async (req, res) => {
-    const { nome_funcionario } = req.body;
-    const { fk_cargo } = req.body;
+    try {
+        const { nome_funcionario, fk_cargo } = req.body;
 
-    const newFuncionario = await Funcionario.create({ nome_funcionario, fk_cargo });
+        // Cria o novo funcionário
+        await Funcionario.create({
+            nome_funcionario,
+            fk_cargo
+        });
 
-    const { nome_cargo } = req.body;
+        res.status(200).json({ message: "Funcionário cadastrado com sucesso!" });
 
-    const newCargo = await Cargo.create({ nome_cargo });
+    } catch (error) {
 
-    res.status(200).json({ message: "Funcionário cadastrado com sucesso!" });
+        res.status(500).json({ erro: error.message });
+    }
 
 });
 
 //Buscar funcionario por id (get)
 router.get('/:id', async (req, res) => {
-    //const id = req.params;
-    const funcionario = await Funcionario.findByPk(req.params.id);
-    const cargo = await Cargo.findByPk(req.params.id);
+    try {
+        const funcionario = await Funcionario.findByPk(req.params.id);
 
-    res.status(200).json(funcionario, cargo);
+        res.status(200).json({ funcionario });
+
+    } catch (error) {
+
+        res.status(500).json({ erro: error.message });
+
+    }
 });
 
 //Deleta funcionário por id
 router.delete('/:id', async (req, res) => {
-    await Funcionario.destroy({
-        where: { id_funcionario: req.params.id },
-    });
+    try {
 
-    await Cargo.destroy({
-        where: { id_cargo: req.params.id }
-    });
+        await Funcionario.destroy({
+            where: { id_funcionario: req.params.id }
+        });
 
-    res.status(200).json({ message: "Funcionário excluído com sucesso!" });
+        res.status(200).json({ message: "Funcionário excluído com sucesso!" });
+
+    } catch (error) {
+
+        res.status(500).json({ erro: error.message });
+
+    }
 });
 
 //Alterar funcionário por id (put)
 router.put('/:id', async (req, res) => {
-    const { nome_funcionario } = req.body;
-    const { fk_cargo } = req.body;
+    try {
 
-    await Funcionario.update(
-        { nome_funcionario, fk_cargo },
-        {
-            where: { id_funcionario: req.params.id },
-        }
-    );
+        const { nome_funcionario, fk_cargo } = req.body;
 
-    const { nome_cargo } = req.body;
+        await Funcionario.update(
+            { nome_funcionario, fk_cargo },
+            { 
+                where: { id_funcionario: req.params.id }
+            }
+        );
 
-    await Cargo.update(
-        { nome_cargo },
-        {
-            where: { id_cargo: req.params.id },
-        }
-    );
+        res.status(200).json({ message: "Funcionário atualizado com sucesso!" });
 
-    res.status(200).json({ message: 'Funcionário atualizado com sucesso!' });
+    } catch (error) {
+
+        res.status(500).json({ erro: error.message });
+
+    }
 
 });
 

@@ -2,7 +2,7 @@ const db = require('./db');
 const funcionarios = db.sequelize.define('funcionarios', {
     id_funcionario: {
         type: db.Sequelize.INTEGER,
-        autoIncremente: true,
+        autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
@@ -15,9 +15,8 @@ const funcionarios = db.sequelize.define('funcionarios', {
         allowNull: false,
         references: {model: 'tipo_cargo', key: 'id_cargo'},
         onDelete: 'CASCADE',
-        allowNull: false
     }
 }, {freezeTableName: true});
 
-funcionarios.sync({force: false});
+funcionarios.sync({force: true});
 module.exports = funcionarios;
