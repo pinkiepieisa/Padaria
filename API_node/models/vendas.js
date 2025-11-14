@@ -1,8 +1,8 @@
 const db = require('./db');
 const vendas = db.sequelize.define('vendas', {
-    id_vendas: { //! Escrevi no plural no script mysql 
+    id_venda: { 
         type: db.Sequelize.INTEGER,
-        autoIncremente: true,
+        autoIncrement: true,
         allowNull: false,
         primaryKey: true    
     },
@@ -33,5 +33,5 @@ const vendas = db.sequelize.define('vendas', {
     }
 }, {freezeTableName: true});
 
-vendas.sync({force: false});
+vendas.sync({force: true});
 module.exports = vendas;

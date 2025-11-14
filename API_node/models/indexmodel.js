@@ -31,28 +31,28 @@ Telefone.belongsTo(Cliente, { foreignKey: "fk_cliente" });
 Cliente.hasOne(Status, { foreignKey: "fk_cliente" });
 Status.belongsTo(Cliente, { foreignKey: "fk_cliente" });
 
-TipoProduto.hasMany(Produtos, { foreignKey: "fk_tipo_p" });
+TipoProduto.hasMany(Produto, { foreignKey: "fk_tipo_p" });
 Produto.belongsTo(TipoProduto, { foreignKey: "fk_tipo_p" });
 
-Cargo.hasMany(Funcionarios, { foreignKey: "fk_cargo" });
+Cargo.hasMany(Funcionario, { foreignKey: "fk_cargo" });
 Funcionario.belongsTo(Cargo, { foreignKey: "fk_cargo" });
 
 //Vendas
-Cliente.hasMany(Vendas, { foreignKey: "fk_cliente" });
+Cliente.hasMany(Venda, { foreignKey: "fk_cliente" });
 Venda.belongsTo(Cliente, { foreignKey: "fk_cliente" });
 
-Funcionario.hasMany(Vendas, { foreignKey: "fk_funcionario" });
-Venda.belongsTo(Funcionarios, { foreignKey: "fk_funcionario" });
+Funcionario.hasMany(Venda, { foreignKey: "fk_funcionario" });
+Venda.belongsTo(Funcionario, { foreignKey: "fk_funcionario" });
 
-Pagamento.hasMany(Vendas, { foreignKey: "fk_pagamento" });
+Pagamento.hasMany(Venda, { foreignKey: "fk_pagamento" });
 Venda.belongsTo(Pagamento, { foreignKey: "fk_pagamento" });
 
 //Venda produto
 Venda.hasMany(VendaProduto, { foreignKey: "fk_venda" });
-VendaProduto.belongsTo(Vendas, { foreignKey: "fk_venda" });
+VendaProduto.belongsTo(Venda, { foreignKey: "fk_venda" });
 
 Produto.hasMany(VendaProduto, { foreignKey: "fk_produto" });
-VendaProduto.belongsTo(Produtos, { foreignKey: "fk_produto" });
+VendaProduto.belongsTo(Produto, { foreignKey: "fk_produto" });
 
 //Exportações
 module.exports = { Cliente, Endereco, Status, Telefone };

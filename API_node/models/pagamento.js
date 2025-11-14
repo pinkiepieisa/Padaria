@@ -2,15 +2,15 @@ const db = require('./db');
 const pagamento = db.sequelize.define('pagamento', {
     id_pagamento: {
         type: db.Sequelize.INTEGER,
-        autoIncrement: true,
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true
     },
     tipo_pagamento: {
-        type: db.Sequelize.TEXT,
+        type: db.Sequelize.STRING,
         allowNull: false
     }
 }, {freezeTableName: true});
 
-pagamento.sync({force: false});
+pagamento.sync({force: true});
 module.exports = pagamento;
