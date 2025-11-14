@@ -19,5 +19,5 @@ id_status: {
   }
 }, {freezeTableName: true});
 
-status_cliente.sync({force: true});
+status_cliente.sync({force: false});
 module.exports = status_cliente;

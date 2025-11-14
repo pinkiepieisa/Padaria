@@ -32,5 +32,5 @@ const endereco = db.sequelize.define('endereco', {
 }, {freezeTableName: true});
 
 
-endereco.sync({force: true});
+endereco.sync({force: false});
 module.exports = endereco;

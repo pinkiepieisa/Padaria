@@ -26,5 +26,5 @@ const produtos = db.sequelize.define('produtos', {
     }
 }, {freezeTableName: true});
 
-produtos.sync({force: true});
+produtos.sync({force: false});
 module.exports = produtos;

@@ -18,5 +18,5 @@ const funcionarios = db.sequelize.define('funcionarios', {
     }
 }, {freezeTableName: true});
 
-funcionarios.sync({force: true});
+funcionarios.sync({force: false});
 module.exports = funcionarios;

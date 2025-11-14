@@ -23,5 +23,5 @@ const telefone = db.sequelize.define('telefone', {
     }
 }, {freezeTableName: true});
 
-telefone.sync({force: true});
+telefone.sync({force: false});
 module.exports = telefone;

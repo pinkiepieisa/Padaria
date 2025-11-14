@@ -12,5 +12,5 @@ const tipo_produto = db.sequelize.define('tipo_produto', {
     }
 }, {freezeTableName: true});
 
-tipo_produto.sync({force: true});
+tipo_produto.sync({force: false});
 module.exports = tipo_produto;

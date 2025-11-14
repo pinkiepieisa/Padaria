@@ -33,5 +33,5 @@ const vendas = db.sequelize.define('vendas', {
     }
 }, {freezeTableName: true});
 
-vendas.sync({force: true});
+vendas.sync({force: false});
 module.exports = vendas;

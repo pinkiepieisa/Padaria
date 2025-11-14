@@ -12,5 +12,5 @@ const pagamento = db.sequelize.define('pagamento', {
     }
 }, {freezeTableName: true});
 
-pagamento.sync({force: true});
+pagamento.sync({force: false});
 module.exports = pagamento;

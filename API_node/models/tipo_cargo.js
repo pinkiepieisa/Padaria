@@ -13,5 +13,5 @@ const tipo_cargo = db.sequelize.define('tipo_cargo', {
     
 }, {freezeTableName: true});
 
-tipo_cargo.sync({force: true});
+tipo_cargo.sync({force: false});
 module.exports = tipo_cargo;
