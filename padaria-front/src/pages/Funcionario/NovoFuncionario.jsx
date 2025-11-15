@@ -1,50 +1,64 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function NovoFuncionario() {
-  const [nome_funcionario, setNome] = useState("");
-  const [fk_cargo, setFkCargo] = useState("");
-  const [cargoList, setCargoList] = useState([]);
+function NovoFuncionario() {
+  const [nome, setNome] = useState("");
+  const [salario, setSalario] = useState("");
+  const [cargoId, setCargoId] = useState("");
+  const [cargos, setCargos] = useState([]);
 
   useEffect(() => {
-    async function load() {
-      const resp = await fetch("http://localhost:8081/cargo");
-      const data = await resp.json();
-      setCargoList(data);
+    async function carregarCargos() {
+      const resposta = await fetch("http://localhost:8081/cargo");
+      const dados = await resposta.json();
+      setCargos(dados);
     }
-    load();
+    carregarCargos();
   }, []);
 
-  async function cadastrar() {
-    const resp = await fetch("http://localhost:8081/funcionario", {
+  const salvarFuncionario = async () => {
+    const resposta = await fetch("http://localhost:8081/funcionario", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome_funcionario, fk_cargo }),
+      body: JSON.stringify({
+        nome_funcionario: nome,
+        salario,
+        id_cargo: cargoId
+      })
     });
 
-    const data = await resp.json();
-    alert(data.message);
-  }
+    const dados = await resposta.json();
+    alert(dados.mensagem || "Funcionário cadastrado");
+  };
 
   return (
-    <div>
-      <h2>Novo Funcionário</h2>
+    <div style={{ padding: "20px" }}>
+      <h1>Cadastrar Funcionário</h1>
 
       <input
+        type="text"
         placeholder="Nome"
-        value={nome_funcionario}
+        value={nome}
         onChange={(e) => setNome(e.target.value)}
-      />
+      /><br /><br />
 
-      <select value={fk_cargo} onChange={(e) => setFkCargo(e.target.value)}>
-        <option value="">Selecione o Cargo</option>
-        {cargoList.map((c) => (
-          <option key={c.id_cargo} value={c.id_cargo}>
-            {c.nome_cargo}
-          </option>
+      <input
+        type="number"
+        placeholder="Salário"
+        value={salario}
+        onChange={(e) => setSalario(e.target.value)}
+      /><br /><br />
+
+      <select value={cargoId} onChange={(e) => setCargoId(e.target.value)}>
+        <option value="">Selecione um cargo...</option>
+        {cargos.map((c) => (
+          <option key={c.id} value={c.id}>{c.nome_cargo}</option>
         ))}
       </select>
 
-      <button onClick={cadastrar}>Cadastrar</button>
+      <br /><br />
+      <button onClick={salvarFuncionario}>Cadastrar</button>
     </div>
   );
 }
+
+export default NovoFuncionario;

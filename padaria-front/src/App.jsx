@@ -5,6 +5,7 @@ import Home from "./pages/Home/Home";
 
 // CLIENTE
 import CadastroCliente from "./pages/Cliente/CadastroCliente";
+import ListaClientes from "./pages/Funcionario/ListaClientes";
 
 // FUNCIONÁRIO
 import MenuFuncionario from "./pages/Funcionario/MenuFuncionario";
@@ -12,8 +13,8 @@ import NovoFuncionario from "./pages/Funcionario/NovoFuncionario";
 import ListaFuncionarios from "./pages/Funcionario/ListaFuncionarios";
 
 // STATUS
-import NovoStatusCliente from "./pages/Cliente/ListaStatusCliente";
-import ListaStatusCliente from "./pages/Cliente/ListaStatusCliente
+import NovoStatusCliente from "./pages/Cliente/NovoStatusCliente";
+import ListaStatusCliente from "./pages/Cliente/ListaStatusCliente";
 
 // CARGO
 import NovoCargo from "./pages/Funcionario/NovoCargo";
@@ -49,6 +50,8 @@ export default function App() {
 
         {/* CLIENTE */}
         <Route path="/cliente/cadastro" element={<CadastroCliente />} />
+        <Route path="/funcionario/lista-clientes" element={<ListaClientes />} />
+
 
         {/* FUNCIONÁRIO */}
         <Route path="/funcionario" element={<MenuFuncionario />} />

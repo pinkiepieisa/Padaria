@@ -1,56 +1,65 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function NovoProduto() {
-  const [nome_produto, setNome] = useState("");
-  const [unidade_medida, setMedida] = useState("");
-  const [preco_produto, setPreco] = useState("");
-
-  const [fk_tipo_p, setFkTipo] = useState("");
+function NovoProduto() {
+  const [nome, setNome] = useState("");
+  const [preco, setPreco] = useState("");
+  const [tipoId, setTipoId] = useState("");
   const [tipos, setTipos] = useState([]);
 
   useEffect(() => {
-    async function load() {
+    async function carregarTipos() {
       const resp = await fetch("http://localhost:8081/tipo-produto");
-      const data = await resp.json();
-      setTipos(data);
+      const dados = await resp.json();
+      setTipos(dados);
     }
-    load();
+    carregarTipos();
   }, []);
 
-  async function cadastrar() {
-    const resp = await fetch("http://localhost:8081/produto", {
+  const salvar = async () => {
+    const r = await fetch("http://localhost:8081/produto", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        nome_produto,
-        unidade_medida,
-        preco_produto,
-        fk_tipo_p,
-      }),
+        nome_produto: nome,
+        preco,
+        id_tipo_produto: tipoId
+      })
     });
 
-    const data = await resp.json();
-    alert(data.message);
-  }
+    const d = await r.json();
+    alert(d.mensagem || "Produto cadastrado!");
+  };
 
   return (
-    <div>
-      <h2>Novo Produto</h2>
+    <div style={{ padding: "20px" }}>
+      <h1>Cadastrar Produto</h1>
 
-      <input placeholder="Nome" value={nome_produto} onChange={(e) => setNome(e.target.value)} />
-      <input placeholder="Unidade (un, kg…)" value={unidade_medida} onChange={(e) => setMedida(e.target.value)} />
-      <input placeholder="Preço" value={preco_produto} onChange={(e) => setPreco(e.target.value)} />
+      <input
+        placeholder="Nome"
+        value={nome}
+        onChange={(e) => setNome(e.target.value)}
+      /><br /><br />
 
-      <select value={fk_tipo_p} onChange={(e) => setFkTipo(e.target.value)}>
-        <option value="">Selecione o Tipo</option>
+      <input
+        type="number"
+        placeholder="Preço"
+        value={preco}
+        onChange={(e) => setPreco(e.target.value)}
+      /><br /><br />
+
+      <select value={tipoId} onChange={(e) => setTipoId(e.target.value)}>
+        <option value="">Selecione um tipo</option>
         {tipos.map((t) => (
-          <option key={t.id_tipo} value={t.id_tipo}>
-            {t.nome_tipo}
+          <option key={t.id} value={t.id}>
+            {t.descricao_tipo}
           </option>
         ))}
       </select>
 
-      <button onClick={cadastrar}>Cadastrar</button>
+      <br /><br />
+      <button onClick={salvar}>Cadastrar</button>
     </div>
   );
 }
+
+export default NovoProduto;

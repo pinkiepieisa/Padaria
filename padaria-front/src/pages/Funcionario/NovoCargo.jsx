@@ -1,32 +1,37 @@
 import { useState } from "react";
 
-export default function NovoCargo() {
-  const [nome_cargo, setCargo] = useState("");
+function NovoCargo() {
+  const [nomeCargo, setNomeCargo] = useState("");
 
-  async function salvarCargo() {
-    const resp = await fetch("http://localhost:8081/cargo", {
+  const salvarCargo = async () => {
+    const resposta = await fetch("http://localhost:8081/cargo", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome_cargo }),
+      body: JSON.stringify({
+        nome_cargo: nomeCargo
+      })
     });
 
-    const data = await resp.json();
-    alert(data.message);
-    setCargo("");
-  }
+    const dados = await resposta.json();
+    alert(dados.mensagem || "Cargo cadastrado");
+  };
 
   return (
-    <div>
-      <h2>Novo Cargo</h2>
+    <div style={{ padding: "20px" }}>
+      <h1>Cadastrar Cargo</h1>
 
       <input
         type="text"
-        placeholder="Ex.: Atendente, Caixa..."
-        value={nome_cargo}
-        onChange={(e) => setCargo(e.target.value)}
+        placeholder="Nome do cargo"
+        value={nomeCargo}
+        onChange={(e) => setNomeCargo(e.target.value)}
       />
+
+      <br /><br />
 
       <button onClick={salvarCargo}>Cadastrar</button>
     </div>
   );
 }
+
+export default NovoCargo;
