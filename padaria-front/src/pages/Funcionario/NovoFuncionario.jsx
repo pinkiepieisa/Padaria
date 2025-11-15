@@ -1,43 +1,50 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export default function NovoFuncionario() {
-  const [form, setForm] = useState({
-    nome_funcionario: "",
-    fk_cargo: "",
-  });
+  const [nome_funcionario, setNome] = useState("");
+  const [fk_cargo, setFkCargo] = useState("");
+  const [cargoList, setCargoList] = useState([]);
 
-  function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  }
+  useEffect(() => {
+    async function load() {
+      const resp = await fetch("http://localhost:8081/cargo");
+      const data = await resp.json();
+      setCargoList(data);
+    }
+    load();
+  }, []);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-
-    const res = await fetch("http://localhost:8081/funcionario", {
+  async function cadastrar() {
+    const resp = await fetch("http://localhost:8081/funcionario", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ nome_funcionario, fk_cargo }),
     });
 
-    const dados = await res.json();
-    alert(dados.message);
+    const data = await resp.json();
+    alert(data.message);
   }
 
   return (
-    <div style={{ padding: 30 }}>
-      <h1>Novo Funcionário</h1>
+    <div>
+      <h2>Novo Funcionário</h2>
 
-      <form onSubmit={handleSubmit}>
-        <input name="nome_funcionario" placeholder="Nome" onChange={handleChange} />
-        <input name="fk_cargo" placeholder="Cargo (ID)" onChange={handleChange} />
+      <input
+        placeholder="Nome"
+        value={nome_funcionario}
+        onChange={(e) => setNome(e.target.value)}
+      />
 
-        <button type="submit">Cadastrar</button>
-      </form>
+      <select value={fk_cargo} onChange={(e) => setFkCargo(e.target.value)}>
+        <option value="">Selecione o Cargo</option>
+        {cargoList.map((c) => (
+          <option key={c.id_cargo} value={c.id_cargo}>
+            {c.nome_cargo}
+          </option>
+        ))}
+      </select>
 
-      <Link to="/funcionario">
-        <button style={{ marginTop: 20 }}>Voltar</button>
-      </Link>
+      <button onClick={cadastrar}>Cadastrar</button>
     </div>
   );
 }

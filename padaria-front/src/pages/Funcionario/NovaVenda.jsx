@@ -1,58 +1,95 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export default function NovaVenda() {
-  const [form, setForm] = useState({
-    data_hora: "",
-    fk_funcionario: "",
-    fk_cliente: "",
-    fk_pagamento: "",
-    fk_venda: "",
-    fk_produto: "",
-    quantidade: "",
-    preco_unitario: "",
-  });
+  // Selects
+  const [clientes, setClientes] = useState([]);
+  const [funcionarios, setFuncionarios] = useState([]);
+  const [pagamentos, setPagamentos] = useState([]);
+  const [produtos, setProdutos] = useState([]);
 
-  function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  }
+  // Campos
+  const [fk_cliente, setCliente] = useState("");
+  const [fk_funcionario, setFuncionario] = useState("");
+  const [fk_pagamento, setPagamento] = useState("");
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  const [fk_produto, setProd] = useState("");
+  const [quantidade, setQtd] = useState("");
+  const [preco_unitario, setPreco] = useState("");
 
-    const res = await fetch("http://localhost:8081/venda", {
+  useEffect(() => {
+    async function loadAll() {
+      setClientes(await fetch("http://localhost:8081/cliente").then(r => r.json()));
+      setFuncionarios(await fetch("http://localhost:8081/funcionario").then(r => r.json()));
+      setPagamentos(await fetch("http://localhost:8081/pagamento").then(r => r.json()));
+      setProdutos(await fetch("http://localhost:8081/produto").then(r => r.json()));
+    }
+    loadAll();
+  }, []);
+
+  async function cadastrar() {
+    const resp = await fetch("http://localhost:8081/venda", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify({
+        fk_cliente,
+        fk_funcionario,
+        fk_pagamento,
+        venda_produto: { fk_produto, quantidade, preco_unitario },
+      }),
     });
 
-    const dados = await res.json();
-    alert(dados.message);
+    const data = await resp.json();
+    alert(data.message);
   }
 
   return (
-    <div style={{ padding: 30 }}>
-      <h1>Nova Venda</h1>
+    <div>
+      <h2>Nova Venda</h2>
 
-      <form onSubmit={handleSubmit}>
+      <h3>Cliente</h3>
+      <select value={fk_cliente} onChange={(e) => setCliente(e.target.value)}>
+        <option value="">Selecione</option>
+        {clientes.map((c) => (
+          <option key={c.id_cliente} value={c.id_cliente}>
+            {c.nome_cliente}
+          </option>
+        ))}
+      </select>
 
-        <input name="data_hora" placeholder="Data e Hora" onChange={handleChange} />
-        <input name="fk_funcionario" placeholder="Funcionário (ID)" onChange={handleChange} />
-        <input name="fk_cliente" placeholder="Cliente (ID)" onChange={handleChange} />
-        <input name="fk_pagamento" placeholder="Pagamento (ID)" onChange={handleChange} />
+      <h3>Funcionário</h3>
+      <select value={fk_funcionario} onChange={(e) => setFuncionario(e.target.value)}>
+        <option value="">Selecione</option>
+        {funcionarios.map((f) => (
+          <option key={f.id_funcionario} value={f.id_funcionario}>
+            {f.nome_funcionario}
+          </option>
+        ))}
+      </select>
 
-        <hr />
+      <h3>Pagamento</h3>
+      <select value={fk_pagamento} onChange={(e) => setPagamento(e.target.value)}>
+        <option value="">Selecione</option>
+        {pagamentos.map((p) => (
+          <option key={p.id_pagamento} value={p.id_pagamento}>
+            {p.tipo_pagamento}
+          </option>
+        ))}
+      </select>
 
-        <input name="fk_produto" placeholder="Produto (ID)" onChange={handleChange} />
-        <input name="quantidade" placeholder="Quantidade" onChange={handleChange} />
-        <input name="preco_unitario" placeholder="Preço unitário" onChange={handleChange} />
+      <h3>Produto</h3>
+      <select value={fk_produto} onChange={(e) => setProd(e.target.value)}>
+        <option value="">Selecione</option>
+        {produtos.map((p) => (
+          <option key={p.id_produto} value={p.id_produto}>
+            {p.nome_produto}
+          </option>
+        ))}
+      </select>
 
-        <button type="submit">Cadastrar</button>
-      </form>
+      <input placeholder="Quantidade" value={quantidade} onChange={(e) => setQtd(e.target.value)} />
+      <input placeholder="Preço unitário" value={preco_unitario} onChange={(e) => setPreco(e.target.value)} />
 
-      <Link to="/funcionario">
-        <button style={{ marginTop: 20 }}>Voltar</button>
-      </Link>
+      <button onClick={cadastrar}>Cadastrar Venda</button>
     </div>
   );
 }

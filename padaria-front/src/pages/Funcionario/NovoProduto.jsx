@@ -1,47 +1,56 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export default function NovoProduto() {
-  const [form, setForm] = useState({
-    nome_produto: "",
-    fk_tipo_p: "",
-    unidade_medida: "",
-    preco_produto: "",
-  });
+  const [nome_produto, setNome] = useState("");
+  const [unidade_medida, setMedida] = useState("");
+  const [preco_produto, setPreco] = useState("");
 
-  function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  }
+  const [fk_tipo_p, setFkTipo] = useState("");
+  const [tipos, setTipos] = useState([]);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  useEffect(() => {
+    async function load() {
+      const resp = await fetch("http://localhost:8081/tipo-produto");
+      const data = await resp.json();
+      setTipos(data);
+    }
+    load();
+  }, []);
 
-    const res = await fetch("http://localhost:8081/produto", {
+  async function cadastrar() {
+    const resp = await fetch("http://localhost:8081/produto", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify({
+        nome_produto,
+        unidade_medida,
+        preco_produto,
+        fk_tipo_p,
+      }),
     });
 
-    const dados = await res.json();
-    alert(dados.message);
+    const data = await resp.json();
+    alert(data.message);
   }
 
   return (
-    <div style={{ padding: 30 }}>
-      <h1>Novo Produto</h1>
+    <div>
+      <h2>Novo Produto</h2>
 
-      <form onSubmit={handleSubmit}>
-        <input name="nome_produto" placeholder="Nome" onChange={handleChange} />
-        <input name="fk_tipo_p" placeholder="Tipo de Produto (ID)" onChange={handleChange} />
-        <input name="unidade_medida" placeholder="Unidade" onChange={handleChange} />
-        <input name="preco_produto" placeholder="Preço" onChange={handleChange} />
+      <input placeholder="Nome" value={nome_produto} onChange={(e) => setNome(e.target.value)} />
+      <input placeholder="Unidade (un, kg…)" value={unidade_medida} onChange={(e) => setMedida(e.target.value)} />
+      <input placeholder="Preço" value={preco_produto} onChange={(e) => setPreco(e.target.value)} />
 
-        <button type="submit">Cadastrar</button>
-      </form>
+      <select value={fk_tipo_p} onChange={(e) => setFkTipo(e.target.value)}>
+        <option value="">Selecione o Tipo</option>
+        {tipos.map((t) => (
+          <option key={t.id_tipo} value={t.id_tipo}>
+            {t.nome_tipo}
+          </option>
+        ))}
+      </select>
 
-      <Link to="/funcionario">
-        <button style={{ marginTop: 20 }}>Voltar</button>
-      </Link>
+      <button onClick={cadastrar}>Cadastrar</button>
     </div>
   );
 }
